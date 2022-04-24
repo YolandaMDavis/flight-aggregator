@@ -1,0 +1,159 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Real-Time Flight Monitoring Data and Dashboards",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PD80DC0A202C84E8F"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 15,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "8.5.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PD80DC0A202C84E8F"
+          },
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "key": "Q-114b46eb-fa70-4085-8f66-e6928d8ca2a8-1",
+          "metricColumn": "callsign",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  last_contact AS \"time\",\n  callsign AS metric,\n  latitude,\n  longitude,\n  velocity,\n  geo_altitue\nFROM flight_records\nWHERE\n  $__unixEpochFilter(last_contact)\nORDER BY time desc",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "latitude"
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "longitude"
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "velocity"
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "geo_altitue"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "flight_records",
+          "timeColumn": "last_contact",
+          "timeColumnType": "int4",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Recent Flights Over Area",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "FlightTrack 0.1v",
+  "uid": "_psBrAwnz",
+  "version": 1,
+  "weekStart": ""
+}

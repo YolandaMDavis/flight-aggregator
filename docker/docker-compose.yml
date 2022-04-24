@@ -1,0 +1,23 @@
+version: "3"
+services:
+  postgres-grafana:
+    image: postgres:latest
+    container_name: postgres-grafana
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "35432:5432"
+  grafana:
+    build: ./grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres-grafana
+    environment:
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=FlightTrack
+      - GF_SECURITY_ADMIN_PASSWORD=admin

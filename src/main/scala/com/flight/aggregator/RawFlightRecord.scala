@@ -1,6 +1,6 @@
 package com.flight.aggregator
 
-import slick.jdbc.H2Profile.api._
+import slick.jdbc.PostgresProfile.api._
 
 case class RawFlightRecord(icao24:String, callsign:Option[String], originCountry:String, timePosition:Option[Int], lastContact:Int,
                            longitude:Option[Double], latitude:Option[Double], baroAltitude:Option[Double], onGround:Boolean, velocity:Option[Double],

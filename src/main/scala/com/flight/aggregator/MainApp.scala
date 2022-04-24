@@ -30,7 +30,7 @@ object MainApp extends LazyLogging{
   implicit val formats: DefaultFormats.type = DefaultFormats
   implicit val CONFIG_PATH = "com.flight.aggregator.flight-api"
   implicit val flightApi: FlightApi = ConfigUtils.loadAppConfig[FlightApi](CONFIG_PATH)
-  implicit val session: SlickSession = SlickSession.forConfig("com.flight.aggregator.slick-h2")
+  implicit val session: SlickSession = SlickSession.forConfig("com.flight.aggregator.slick-postgres")
 
   def main(args: Array[String]): Unit = {
     import session.profile.api._
@@ -43,7 +43,7 @@ object MainApp extends LazyLogging{
     system.registerOnTermination(() => session.close())
     session.db.run(DBIO.seq(schema.createIfNotExists))
 
-    val dbSink = Slick.sink[RawFlightRecord](toStatement = record =>
+    val dbSink = Slick.flow[RawFlightRecord](toStatement = record =>
             sqlu"""INSERT INTO flight_records VALUES(${record.icao24}, ${record.callsign}, ${record.originCountry}, ${record.timePosition},
             ${record.lastContact},${record.longitude}, ${record.latitude}, ${record.baroAltitude}, ${record.onGround}, ${record.velocity},${record.trueTrack},
             ${record.verticalRate}, ${record.sensors}, ${record.geoAltitude}, ${record.squawk}, ${record.spi}, ${record.positionSource}, ${record.unknownField})""")(session)
@@ -54,8 +54,10 @@ object MainApp extends LazyLogging{
               .flatMapConcat(resp => resp.entity.getDataBytes())
               .map(result => RawFlightQuery(result.utf8String))
               .mapConcat(query => query.states)
-              .to(dbSink)
-
+      .map(record => {println(record); record})
+              .via(dbSink)
+        .log("rows")
+        .to(Sink.ignore)
     poll.run()
 
   }
