@@ -9,6 +9,8 @@ services:
       - POSTGRES_DB=postgres
     ports:
       - "35432:5432"
+    volumes:
+      - ./postgres/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
   grafana:
     build: ./grafana
     container_name: grafana
