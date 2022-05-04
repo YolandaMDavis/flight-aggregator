@@ -38,7 +38,7 @@
       },
       "id": 9,
       "panels": [],
-      "title": "Row title",
+      "title": "Anomaly View",
       "type": "row"
     },
     {
@@ -516,7 +516,7 @@
           ]
         }
       ],
-      "title": "Flight Anomalies - High Velocity @ 10k Feet",
+      "title": "Flight Anomalies - High Velocity < 10k Feet",
       "type": "table"
     },
     {
