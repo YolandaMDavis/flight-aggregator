@@ -361,6 +361,7 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 45000,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -370,10 +371,11 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 40000
               }
             ]
-          }
+          },
+          "unit": "lengthft"
         },
         "overrides": []
       },
@@ -397,8 +399,125 @@
         "showThresholdMarkers": true
       },
       "pluginVersion": "8.5.2",
-      "title": "Panel Title",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PD80DC0A202C84E8F"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  time AS \"time\",\n  average_altitude\nFROM flight_summaries\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Average Altitude",
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PD80DC0A202C84E8F"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlRd"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 15,
+        "x": 9,
+        "y": 7
+      },
+      "id": 17,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PD80DC0A202C84E8F"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT * from (SELECT case when company is NULL THEN 'UNKNOWN' else company END as \"company\",\n  fr.* from (SELECT\n  last_contact as \"time\",\n  callsign,latitude, longitude, geo_altitue as \"altitude\", velocity, origin_country,\n  SUBSTRING(callsign,1,3) as three_letter_id\nFROM flight_records) as fr\nLEFT OUTER JOIN flight_call_signs fcs on fr.three_letter_id = fcs.three_letter_id\nWHERE velocity > (SELECT AVG(velocity) + 1.8 * stddev(velocity) from flight_records where flight_records.geo_altitue <= 10000 and $__unixEpochFilter(last_contact))\n  and altitude <= 10000\n  and $__unixEpochFilter(time)\n  AND fr.time=(SELECT MAX(last_contact) FROM flight_records fr_b WHERE fr_b.callsign = fr.callsign)\n) records ORDER BY altitude ASC, velocity DESC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Flight Anomalies - High Velocity @ 10k Feet",
+      "type": "table"
     },
     {
       "collapsed": false,
@@ -406,7 +525,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 14
       },
       "id": 5,
       "panels": [],
@@ -462,7 +581,7 @@
         "h": 16,
         "w": 9,
         "x": 0,
-        "y": 14
+        "y": 15
       },
       "id": 3,
       "options": {
@@ -690,7 +809,7 @@
         "h": 16,
         "w": 15,
         "x": 9,
-        "y": 14
+        "y": 15
       },
       "id": 1,
       "options": {
@@ -778,8 +897,8 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
-    "to": "now"
+    "from": "2022-05-04T16:00:00.000Z",
+    "to": "2022-05-04T18:00:00.000Z"
   },
   "timepicker": {},
   "timezone": "",
