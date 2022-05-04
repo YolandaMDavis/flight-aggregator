@@ -2,6 +2,9 @@ package com.flight.aggregator
 
 import slick.jdbc.PostgresProfile.api._
 
+/**
+ * RawFlightRecord Persistence Class
+ */
 case class RawFlightRecord(icao24:String, callsign:Option[String], originCountry:String, timePosition:Option[Int], lastContact:Int,
                            longitude:Option[Double], latitude:Option[Double], baroAltitude:Option[Double], onGround:Boolean, velocity:Option[Double],
                            trueTrack:Option[Double], verticalRate:Option[Double], sensors:Option[String], geoAltitude:Option[Double],

@@ -15,6 +15,10 @@ import com.flight.aggregator.config.FlightApi
 import scala.concurrent.Future
 import scala.concurrent.duration.{FiniteDuration, SECONDS}
 
+/***
+ * FlightStream
+ * This class is used to build stream for collecting and analyzing flight data
+ */
 object FlightStream {
 
   import session.profile.api._
@@ -30,11 +34,21 @@ object FlightStream {
     session.db.run(DBIO.seq(flightSummarySchema.createIfNotExists))
   }
 
+  /***
+   * Create polling Source fo flight data
+   * @param flightApi config data for flight api
+   * @return
+   */
   private def getPollingSource()(implicit flightApi: FlightApi): Source[HttpRequest, Cancellable] = {
     val pollIntervalInSeconds = flightApi.pollInterval
     Source.tick(FiniteDuration(1,SECONDS), FiniteDuration(pollIntervalInSeconds,SECONDS),Get(flightApi.flightStatePath + "?" + flightApi.searchBoundary))
   }
 
+  /***
+   * Create RawFlightRecord Flow based Sink
+   * @param session SlickSession
+   * @return
+   */
   private def getFlightRecordSink()(implicit session:SlickSession):Flow[RawFlightRecord, Int, NotUsed] = {
     Slick.flow[RawFlightRecord](toStatement = record =>
       sqlu"""INSERT INTO flight_records VALUES(${record.icao24}, ${record.callsign}, ${record.originCountry}, ${record.timePosition},
@@ -42,12 +56,24 @@ object FlightStream {
             ${record.verticalRate}, ${record.sensors}, ${record.geoAltitude}, ${record.squawk}, ${record.spi}, ${record.positionSource}, ${record.unknownField})""")(session)
   }
 
+  /***
+   * Create FlightSummary Flow based Sink
+   * @param session SlickSession
+   * @return
+   */
   private def getFlightSummarySink()(implicit  session:SlickSession):Flow[FlightSummary,Int, NotUsed] ={
     Slick.flow[FlightSummary](toStatement = record =>
       sqlu"""INSERT INTO flight_summaries VALUES(${record.time}, ${record.flight_count}, ${record.average_velocity}, ${record.average_altitude})""")(session)
 
   }
 
+  /***
+   * Create stream to ingest and sink flight data
+   * @param system actor system
+   * @param session SlickSessin
+   * @param flightApi config dta for flight api
+   * @return
+   */
   def getStream()(implicit system:ActorSystem, session:SlickSession, flightApi:FlightApi): RunnableGraph[NotUsed] ={
 
     // initialize the database

@@ -4,8 +4,13 @@ import com.typesafe.scalalogging.LazyLogging
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json._
 
+/**
+ *  RawFlightQuery Case Class
+ *  This class represents the payload returned from the OpenSkyNetwork
+ */
 case class RawFlightQuery(time:Long, states:List[RawFlightRecord]) {
 
+  // Generate FlightSummary objects using flight records in the RawFlightQuery object
   def generateSummary(): Option[FlightSummary] = {
 
     val reducedFlights = states.map(flight => FlightSummary(time, 1, flight.velocity, flight.geoAltitude))
@@ -29,8 +34,8 @@ object RawFlightQuery extends LazyLogging {
   implicit val formats: DefaultFormats.type = DefaultFormats
   val FULL_RECORD_LENGTH = 18
 
-  // flight records periodically send an undocumented field that we still track but sometimes it is missing
-  // this will validate wheter or not field exists based on length
+  // flight records periodically send an undocumented field that is still tracked however sometimes it is missing
+  // this will ensure unknown field is defaulted if missing
   def valid(item:JValue): Boolean = {
     if (item.children.length < FULL_RECORD_LENGTH) {
       logger.warn("Record received with invalid length: {}. Replacing with empty value", item.children.length)
@@ -38,6 +43,7 @@ object RawFlightQuery extends LazyLogging {
     } else true
   }
 
+  // Create a RawFlightQuery object given json string
   def apply(json:String): RawFlightQuery = {
     val tree = parse(json)
     val time = System.currentTimeMillis()
