@@ -18,3 +18,19 @@ libraryDependencies += "com.lightbend.akka" %% "akka-stream-alpakka-slick" % "3.
 libraryDependencies += "com.h2database" % "h2" % "2.1.212"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "org.postgresql" % "postgresql" % "42.3.4"
+
+mainClass in Compile := Some("com.flight.aggregator.MainApp")
+
+enablePlugins(DockerPlugin)
+
+docker / dockerfile := {
+  // The assembly task generates a fat JAR file
+  val artifact: File = assembly.value
+  val artifactTargetPath = s"/app/${artifact.name}"
+
+  new Dockerfile {
+    from("openjdk:11-jre")
+    add(artifact, artifactTargetPath)
+    entryPoint("java", "-jar", artifactTargetPath)
+  }
+}

@@ -11,6 +11,13 @@ services:
       - "35432:5432"
     volumes:
       - ./postgres/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  flight-track:
+    image: default/flight-aggregator
+    container_name: flight-track
+    depends_on:
+      - postgres-grafana
+
   grafana:
     build: ./grafana
     container_name: grafana
@@ -18,6 +25,7 @@ services:
       - "3000:3000"
     depends_on:
       - postgres-grafana
+      - flight-track
     environment:
       - GF_USERS_DEFAULT_THEME=light
       - GF_AUTH_ANONYMOUS_ENABLED=true
