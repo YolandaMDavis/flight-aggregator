@@ -4,9 +4,27 @@ import com.typesafe.scalalogging.LazyLogging
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json._
 
-case class RawFlightQuery(time:Long, states:List[RawFlightRecord])
+case class RawFlightQuery(time:Long, states:List[RawFlightRecord]) {
 
-object RawFlightQuery extends LazyLogging{
+  def generateSummary(): Option[FlightSummary] = {
+
+    val reducedFlights = states.map(flight => FlightSummary(time, 1, flight.velocity, flight.geoAltitude))
+      .reduce((fs1, fs2) => FlightSummary(fs1.time,
+        fs1.flight_count + fs2.flight_count,
+        (fs1.average_velocity ++ fs2.average_velocity).reduceLeftOption(_ + _),
+        (fs1.average_altitude ++ fs2.average_altitude).reduceLeftOption(_ + _)))
+
+    for {
+        velocity <- reducedFlights.average_velocity
+        altitude <- reducedFlights.average_altitude
+        average_velocity = Option(velocity / states.length)
+        average_altitude = Option(altitude / states.length)
+    } yield FlightSummary(reducedFlights.time, reducedFlights.flight_count, average_velocity, average_altitude)
+
+  }
+}
+
+object RawFlightQuery extends LazyLogging {
 
   implicit val formats: DefaultFormats.type = DefaultFormats
   val FULL_RECORD_LENGTH = 18
