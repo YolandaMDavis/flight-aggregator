@@ -36,9 +36,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 5,
+      "id": 9,
       "panels": [],
-      "title": "Flight Maps",
+      "title": "Row title",
       "type": "row"
     },
     {
@@ -76,7 +76,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 17,
+        "h": 12,
         "w": 9,
         "x": 0,
         "y": 1
@@ -143,7 +143,7 @@
           "zoom": 9.81
         }
       },
-      "pluginVersion": "8.5.1",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "datasource": {
@@ -176,7 +176,423 @@
           ]
         }
       ],
-      "title": "Unauthorized Flight Zone",
+      "title": "Unauthorized Flight Zone (Northern GA Region)",
+      "type": "geomap"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PD80DC0A202C84E8F"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "No Data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 200
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 9,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "/^flight_count$/",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PD80DC0A202C84E8F"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  time AS \"time\",\n  flight_count\nFROM flight_summaries",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "flight_count"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "flight_summaries",
+          "timeColumn": "time",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Average Number of Flights",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PD80DC0A202C84E8F"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 400,
+          "min": 60,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 400
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 14,
+        "y": 1
+      },
+      "id": 13,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PD80DC0A202C84E8F"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  time AS \"time\",\n  average_velocity\nFROM flight_summaries\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Average Velocity",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PD80DC0A202C84E8F"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 19,
+        "y": 1
+      },
+      "id": 15,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.5.2",
+      "title": "Panel Title",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 5,
+      "panels": [],
+      "title": "Flight Maps",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PD80DC0A202C84E8F"
+      },
+      "description": "Current tracker of recent flight refreshed periodically.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "metric": {
+                  "index": 0,
+                  "text": "callsign"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 9,
+        "x": 0,
+        "y": 14
+      },
+      "id": 3,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "default"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": true,
+              "style": {
+                "color": {
+                  "fixed": "dark-green"
+                },
+                "opacity": 0.5,
+                "rotation": {
+                  "field": "latitude",
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 5,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/plane.svg",
+                  "mode": "fixed"
+                },
+                "text": {
+                  "field": "",
+                  "fixed": "",
+                  "mode": "field"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "location": {
+              "mode": "auto"
+            },
+            "name": "Flight",
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "view": {
+          "id": "coords",
+          "lat": 32.864317,
+          "lon": -81.727986,
+          "zoom": 7.04
+        }
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PD80DC0A202C84E8F"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "callsign",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT * FROM (SELECT\n  fr_a.callsign,\n  fr_a.latitude,\n  fr_a.longitude,\n  fr_a.last_contact\nFROM flight_records fr_a\nWHERE\n  $__unixEpochFilter(fr_a.last_contact)\n  AND fr_a.last_contact=(SELECT MAX(last_contact) FROM flight_records fr_b WHERE fr_b.callsign = fr_a.callsign)) as records\nORDER BY records.last_contact DESC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "latitude"
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "longitude"
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "longitude"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "flight_records",
+          "timeColumn": "last_contact",
+          "timeColumnType": "int4",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Recent Flights (Georgia - South Carolina)",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [],
+            "fields": {}
+          }
+        }
+      ],
       "type": "geomap"
     },
     {
@@ -274,7 +690,7 @@
         "h": 16,
         "w": 15,
         "x": 9,
-        "y": 1
+        "y": 14
       },
       "id": 1,
       "options": {
@@ -288,7 +704,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.5.1",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "datasource": {
@@ -352,188 +768,6 @@
       "title": "Recent Flights Over Area",
       "transformations": [],
       "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "PD80DC0A202C84E8F"
-      },
-      "description": "Current tracker of recent flight refreshed periodically.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": [
-            {
-              "options": {
-                "metric": {
-                  "index": 0,
-                  "text": "callsign"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 17,
-        "w": 9,
-        "x": 0,
-        "y": 18
-      },
-      "id": 3,
-      "options": {
-        "basemap": {
-          "config": {},
-          "name": "Layer 0",
-          "type": "default"
-        },
-        "controls": {
-          "mouseWheelZoom": true,
-          "showAttribution": true,
-          "showDebug": false,
-          "showScale": false,
-          "showZoom": true
-        },
-        "layers": [
-          {
-            "config": {
-              "showLegend": true,
-              "style": {
-                "color": {
-                  "fixed": "dark-green"
-                },
-                "opacity": 0.5,
-                "rotation": {
-                  "field": "latitude",
-                  "fixed": 0,
-                  "max": 360,
-                  "min": -360,
-                  "mode": "mod"
-                },
-                "size": {
-                  "fixed": 5,
-                  "max": 15,
-                  "min": 2
-                },
-                "symbol": {
-                  "fixed": "img/icons/marker/plane.svg",
-                  "mode": "fixed"
-                },
-                "text": {
-                  "field": "",
-                  "fixed": "",
-                  "mode": "field"
-                },
-                "textConfig": {
-                  "fontSize": 12,
-                  "offsetX": 0,
-                  "offsetY": 0,
-                  "textAlign": "center",
-                  "textBaseline": "middle"
-                }
-              }
-            },
-            "location": {
-              "mode": "auto"
-            },
-            "name": "Flight",
-            "tooltip": true,
-            "type": "markers"
-          }
-        ],
-        "view": {
-          "id": "coords",
-          "lat": 32.864317,
-          "lon": -81.727986,
-          "zoom": 7.04
-        }
-      },
-      "pluginVersion": "8.5.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "PD80DC0A202C84E8F"
-          },
-          "format": "table",
-          "group": [],
-          "metricColumn": "callsign",
-          "rawQuery": true,
-          "rawSql": "SELECT DISTINCT * FROM (SELECT\n  fr_a.callsign,\n  fr_a.latitude,\n  fr_a.longitude,\n  fr_a.last_contact\nFROM flight_records fr_a\nWHERE\n  $__unixEpochFilter(fr_a.last_contact)\n  AND fr_a.last_contact=(SELECT MAX(last_contact) FROM flight_records fr_b WHERE fr_b.callsign = fr_a.callsign)) as records\nORDER BY records.last_contact DESC",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "latitude"
-                ],
-                "type": "column"
-              }
-            ],
-            [
-              {
-                "params": [
-                  "longitude"
-                ],
-                "type": "column"
-              }
-            ],
-            [
-              {
-                "params": [
-                  "longitude"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "flight_records",
-          "timeColumn": "last_contact",
-          "timeColumnType": "int4",
-          "where": [
-            {
-              "name": "$__unixEpochFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "title": "Recent Flights",
-      "transformations": [
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [],
-            "fields": {}
-          }
-        }
-      ],
-      "type": "geomap"
     }
   ],
   "refresh": false,
@@ -544,8 +778,8 @@
     "list": []
   },
   "time": {
-    "from": "2022-05-04T01:00:00.000Z",
-    "to": "2022-05-04T02:00:00.000Z"
+    "from": "now-5m",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",

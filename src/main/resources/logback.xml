@@ -13,9 +13,9 @@
     </root>
 
     <logger name="org.apache" level="error"/>
-    <logger name="org.h2" level="debug"/>
-    <logger name="org.postgresql" level="debug"/>
-    <logger name="slick.jdbc" level="debug"/>
-    <logger name="slick.jdbc.hikaricp" level="debug"/>
+    <logger name="org.h2" level="error"/>
+    <logger name="org.postgresql" level="warn"/>
+    <logger name="slick.jdbc" level="warn"/>
+    <logger name="slick.jdbc.hikaricp" level="warn"/>
 
 </configuration>

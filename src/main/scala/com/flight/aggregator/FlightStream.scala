@@ -35,15 +35,15 @@ object FlightStream {
     Source.tick(FiniteDuration(1,SECONDS), FiniteDuration(pollIntervalInSeconds,SECONDS),Get(flightApi.flightStatePath + "?" + flightApi.searchBoundary))
   }
 
-  private def getFlightRecordSink()(implicit session:SlickSession):Sink[RawFlightRecord, Future[Done]] = {
-    Slick.sink[RawFlightRecord](toStatement = record =>
+  private def getFlightRecordSink()(implicit session:SlickSession):Flow[RawFlightRecord, Int, NotUsed] = {
+    Slick.flow[RawFlightRecord](toStatement = record =>
       sqlu"""INSERT INTO flight_records VALUES(${record.icao24}, ${record.callsign}, ${record.originCountry}, ${record.timePosition},
             ${record.lastContact},${record.longitude}, ${record.latitude}, ${record.baroAltitude}, ${record.onGround}, ${record.velocity},${record.trueTrack},
             ${record.verticalRate}, ${record.sensors}, ${record.geoAltitude}, ${record.squawk}, ${record.spi}, ${record.positionSource}, ${record.unknownField})""")(session)
   }
 
-  private def getFlightSummarySink()(implicit  session:SlickSession):Sink[FlightSummary,Future[Done]] ={
-    Slick.sink[FlightSummary](toStatement = record =>
+  private def getFlightSummarySink()(implicit  session:SlickSession):Flow[FlightSummary,Int, NotUsed] ={
+    Slick.flow[FlightSummary](toStatement = record =>
       sqlu"""INSERT INTO flight_summaries VALUES(${record.time}, ${record.flight_count}, ${record.average_velocity}, ${record.average_altitude})""")(session)
 
   }
@@ -51,6 +51,7 @@ object FlightStream {
   def getStream()(implicit system:ActorSystem, session:SlickSession, flightApi:FlightApi): RunnableGraph[NotUsed] ={
 
     // initialize the database
+    initDb()
 
     // obtain polling source
     val openSkySource = getPollingSource()
@@ -82,9 +83,9 @@ object FlightStream {
       openSkySource ~> httpClient ~> filterSuccess ~> getBytes ~> createRawQuery ~> bcast
 
       // save summaries from query
-      bcast ~> summaryFlow ~> printSummary ~> flightSummarySink
+      bcast ~> summaryFlow ~> printSummary ~> flightSummarySink ~> Sink.ignore
       // save flight records from query
-      bcast ~> extractFlightState ~> printRecord ~> rawFlightSink
+      bcast ~> extractFlightState ~> printRecord ~> rawFlightSink ~> Sink.ignore
 
       ClosedShape
     })
