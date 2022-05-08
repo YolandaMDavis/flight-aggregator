@@ -28,7 +28,7 @@ services:
       - flight-track
     environment:
       - GF_USERS_DEFAULT_THEME=light
-      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_AUTH_ORG_ROLE=viewer
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_DISABLE_LOGIN_FORM=false

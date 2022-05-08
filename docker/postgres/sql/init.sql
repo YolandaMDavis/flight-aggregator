@@ -66,7 +66,7 @@ ALTER TABLE public.flight_records OWNER TO postgres;
 --
 
 CREATE TABLE public.flight_summaries (
-    "time" bigint NOT NULL,
+    "time" integer NOT NULL,
     flight_count integer NOT NULL,
     average_velocity double precision,
     average_altitude double precision
@@ -8819,7 +8819,7 @@ INSERT INTO public.flight_records (icao24, callsign, origin_country, time_positi
 -- Data for Name: flight_summaries; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.flight_summaries ("time", flight_count, average_velocity, average_altitude) VALUES (1651684519219, 246, 184.45024390243918, 7599.060487804877);
+INSERT INTO public.flight_summaries ("time", flight_count, average_velocity, average_altitude) VALUES (1651684519, 246, 184.45024390243918, 7599.060487804877);
 
 
 --

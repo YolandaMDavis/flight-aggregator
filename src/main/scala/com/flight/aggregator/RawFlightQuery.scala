@@ -8,7 +8,7 @@ import net.liftweb.json._
  *  RawFlightQuery Case Class
  *  This class represents the payload returned from the OpenSkyNetwork
  */
-case class RawFlightQuery(time:Long, states:List[RawFlightRecord]) {
+case class RawFlightQuery(time:Int, states:List[RawFlightRecord]) {
 
   // Generate FlightSummary objects using flight records in the RawFlightQuery object
   def generateSummary(): Option[FlightSummary] = {
@@ -46,7 +46,7 @@ object RawFlightQuery extends LazyLogging {
   // Create a RawFlightQuery object given json string
   def apply(json:String): RawFlightQuery = {
     val tree = parse(json)
-    val time = System.currentTimeMillis()
+    val time = (System.currentTimeMillis() /1000 ).intValue
     val elements = (tree \\ "states").children
     val states = elements.flatMap(_.children)
                        .map(item  => {

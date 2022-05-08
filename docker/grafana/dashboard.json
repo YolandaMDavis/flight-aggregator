@@ -239,7 +239,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time AS \"time\",\n  flight_count\nFROM flight_summaries",
+          "rawSql": "SELECT\n  time AS \"time\",\n  flight_count\nFROM flight_summaries\nWHERE $__unixEpochFilter(time)",
           "refId": "A",
           "select": [
             [
@@ -325,7 +325,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time AS \"time\",\n  average_velocity\nFROM flight_summaries\n",
+          "rawSql": "SELECT\n  time AS \"time\",\n  average_velocity\nFROM flight_summaries\nWHERE $__unixEpochFilter(time)",
           "refId": "A",
           "select": [
             [
@@ -409,7 +409,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time AS \"time\",\n  average_altitude\nFROM flight_summaries\n",
+          "rawSql": "SELECT\n  time AS \"time\",\n  average_altitude\nFROM flight_summaries\nWHERE $__unixEpochFilter(time)",
           "refId": "A",
           "select": [
             [
