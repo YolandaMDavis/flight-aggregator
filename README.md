@@ -43,7 +43,7 @@ docker compose build
 # startup docker instances for application. We include -d flag to allow to run in background (removing flag allows logs to be visible
 docker compose up -d
 ```
-3.In a browser navigate to the FlightTrack Dashboard running on port 3000 [here](http://localhost:3000/d/_2UICND/flighttrack-0-2v?orgId=1). Read only access is granted and a login is not required.
+3.In a browser navigate to the FlightTrack Dashboard running on port 3000 at [http://localhost:3000/d/_2UICND/flighttrack-0-2v?orgId=1](http://localhost:3000/d/_2UICND/flighttrack-0-2v?orgId=1). Read only access is granted and a login is not required.
 
 4.Application can be shutdown using ```docker compose down``` (when running without -d flag Ctrl-C may be required first).
 
